@@ -1,4 +1,4 @@
-# React Styled Components Example
+# React Hooks Example
  
 This example app shows how to create a React app and use React Hooks for authentication.
 
