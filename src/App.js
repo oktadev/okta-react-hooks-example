@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
-import { Security, SecureRoute, ImplicitCallback } from "@okta/okta-react";
+import { Security, SecureRoute, LoginCallback } from "@okta/okta-react";
 import config from "./config";
 
 import Home from "./components/home/Home";
@@ -21,7 +21,7 @@ function App() {
         <Route path="/" exact component={Home} />
         <Route path="/login" component={Login} />
         <SecureRoute path="/profile" exact component={Profile} />
-        <Route path="/callback" component={ImplicitCallback} />
+        <Route path="/callback" component={LoginCallback} />
       </Security>
     </Router>
   );

@@ -1,58 +1,40 @@
-import React, { Component } from 'react';
-import { withAuth } from '@okta/okta-react';
+import React, { useState, useEffect } from 'react';
+import { useOktaAuth } from '@okta/okta-react';
 
-async function checkAuthentication() {
-  const authenticated = await this.props.auth.isAuthenticated();
-  if (authenticated !== this.state.authenticated) {
-    if (authenticated && !this.state.userinfo) {
-      const userinfo = await this.props.auth.getUser();
-      this.setState({ authenticated, userinfo });
+const Profile = () => {
+  const { authState, authService } = useOktaAuth();
+  const [ userInfo, setUserInfo ] = useState(null);
+
+  useEffect(() => {
+    if(!authState.isAuthenticated) {
+      // When user isn't authenticated, forget any user info
+      setUserInfo(null);
     } else {
-      this.setState({ authenticated });
+      authService.getUser().then( info => {
+        setUserInfo(info);
+      });
     }
-  }
-}
+  }, [authState, authService]); // Update if authState changes
 
-export default withAuth(class Profile extends Component {
 
-  constructor(props){
-    super(props);
-    this.state = {userinfo: null, ready: false};
-    this.checkAuthentication = checkAuthentication.bind(this);
-  }
-
-  async componentDidMount() {
-    await this.checkAuthentication();
-    this.applyClaims();
-  }
-
-  async componentDidUpdate() {
-    await this.checkAuthentication();
-    this.applyClaims();
-  }
-
-  async applyClaims() {
-    if (this.state.userinfo && !this.state.claims) {
-      const claims = Object.entries(this.state.userinfo);
-      this.setState({ claims, ready: true });
-    }
-  }
-
-  render(){
-    return(
+  if(!userInfo){
+    return (
       <div>
-        {!this.state.ready && <p>Fetching user profile..</p>}
-        {this.state.ready &&
-        <div>
-          <h1>User Profile</h1>
-          <ul>
-            {this.state.claims.map((claim) => {
-              return <li><strong>{claim[0]}:</strong> {claim[1]}</li>;
-            })}
-          </ul>
-        </div>
-        }
+        <p>Fetching user profile...</p>
       </div>
     );
   }
-});
+
+  return (
+    <div>
+      <h1>User Profile</h1>
+      <ul>
+        {Object.entries(userInfo).map((claim) => {
+          return <li><strong>{claim[0]}:</strong> {claim[1]}</li>;
+        })}
+      </ul>
+    </div>
+  );
+}
+
+export default Profile;
