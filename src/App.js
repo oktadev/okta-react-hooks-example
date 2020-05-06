@@ -21,7 +21,7 @@ function App() {
         <Route path="/" exact component={Home} />
         <Route path="/login" component={Login} />
         <SecureRoute path="/profile" exact component={Profile} />
-        <Route path="/implicit/callback" component={ImplicitCallback} />
+        <Route path="/callback" component={ImplicitCallback} />
       </Security>
     </Router>
   );
