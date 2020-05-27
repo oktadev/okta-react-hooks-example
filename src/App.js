@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, useHistory } from "react-router-dom";
 import { Security, SecureRoute, LoginCallback } from "@okta/okta-react";
 import config from "./config";
 
@@ -9,13 +9,16 @@ import Navigation from "./components/navigation/Navigation";
 import Login from "./components/login/Login";
 import "./App.css";
 
-function customAuthHandler({ history }) {
-  history.push("/login");
-}
 
-function App() {
+const HasAccessToRouter =()=> {
+
+  const history = useHistory();
+
+  const customAuthHandler = () => {
+    history.push("/login");
+  }
+
   return (
-    <Router>
       <Security {...config.oidc} onAuthRequired={customAuthHandler}>
         <Navigation />
         <Route path="/" exact component={Home} />
@@ -23,8 +26,13 @@ function App() {
         <SecureRoute path="/profile" exact component={Profile} />
         <Route path="/callback" component={LoginCallback} />
       </Security>
-    </Router>
   );
 }
+
+const App =()=> (
+  <Router>
+    <HasAccessToRouter/>
+  </Router>
+)
 
 export default App;
