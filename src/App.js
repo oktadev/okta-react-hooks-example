@@ -8,7 +8,6 @@ import Profile from "./components/profile/Profile";
 import Navigation from "./components/navigation/Navigation";
 import Login from "./components/login/Login";
 import "./App.css";
-import Landing from "./components/landing/Landing";
 
 
 const HasAccessToRouter = () => {
@@ -25,7 +24,6 @@ const HasAccessToRouter = () => {
       <Route path="/" exact component={Home} />
       <Route path="/login" component={Login} />
       <SecureRoute path="/profile" exact component={Profile} />
-      <SecureRoute path="/landing" exact component={Landing} />
       <Route path="/callback" component={LoginCallback} />
     </Security>
   );
